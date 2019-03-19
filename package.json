@@ -1,0 +1,19 @@
+{
+  "name": "timelin-server",
+  "version": "1.0.0",
+  "description": "Api do TimeLin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "pg": "^7.9.0"
+  }
+}
