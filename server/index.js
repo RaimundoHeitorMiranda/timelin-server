@@ -4,7 +4,7 @@ const app = express()
 var cors = require('cors');
 const userDb = require('./queries/user-queries')
 const acontecimentoDb = require('./queries/acontecimentos-queries')
-const port = 3000
+const port =  process.env.PORT || 8080;
 
 app.use(bodyParser.json());
 app.use(cors());
