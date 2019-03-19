@@ -3,28 +3,31 @@ var bcrypt = require('bcrypt');
 
 //LOGIN
 const login = (request, response) => {
+
+  // extrai os dados do corpo da requisição
   const user = {email,senha} = request.body;
 
-  // Procura o usário no bd
+  // procura o usário no bd
   pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
-    // Em caso de erro..
+    // em caso de erro..
     if (error) {
       response.status(400).send(error);
 
-    // Se não encontrar no bd retorna um erro
+    // se não encontrar no bd retorna um erro
     }else if(results.rows[0] == undefined){
       response.status(400).send("Senha ou email errados");
 
-    // Se encontrar
+    // se encontrar
     }else{
-      // Compara as senhas
+      // compara as senhas
       bcrypt.compare(senha, results.rows[0].senha, function(err, res) {
         if(res) {
-          // Se as senhas conferem envia o usuário logado como resposta
+          // se as senhas conferem envia o usuário logado como resposta
+          // mas antes remove o campo senha
           delete results.rows[0].senha;
           response.status(200).json(results.rows[0]);
         } else {
-           // Se não...
+           // se não...
            response.status(400).send("Senha ou email errados");
         }
       });
@@ -34,14 +37,17 @@ const login = (request, response) => {
 
 //READ
 const getUserById = (request, response) => {
-  // Obtém o id
+
+  // obtém o id
   const id = parseInt(request.params.id);
 
   // consulta no banco
   pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+    // em caso de error
     if (error) {
       response.status(400).send(error);
     }
+    // se não retorna os usuários
     response.status(200).json(results.rows);
   })
 }
@@ -55,12 +61,15 @@ const createUser = (request, response) => {
   // verifica se o email já está cadastrado
   pool.query('SELECT * FROM users WHERE email = $1',[email], (error,results) =>{
 
+    // se tiver envia o erro
     if(error){
       response.status(400).send(err);
     }
 
+    // se já existir um email, retorna....
     if(results.rowCount>0){
       response.status(406).send(`Email já cadastrado`);
+    // se não adiciona o usuário
     }else{
       // criptografando senha
       bcrypt.hash(user.senha,10,(err,hash)=>{
@@ -83,9 +92,10 @@ const createUser = (request, response) => {
 
 //UPDATE
 const updateUser = (request, response) => {
+
+  // extraindo dados da requisição
   const id = parseInt(request.params.id)
   const user = { nome, email, senha } = request.body
-  console.log("dados request",id,user)
 
   // Atualizando apenas nome e email
   if(senha == undefined){
@@ -100,8 +110,10 @@ const updateUser = (request, response) => {
         response.status(200).json("Dados atualizados com sucesso");
       }
     )
+
   // Atualizando com senha
   }else{
+    
     // criptografando senha
     bcrypt.hash(user.senha,10,(err,hash)=>{
        if(err){

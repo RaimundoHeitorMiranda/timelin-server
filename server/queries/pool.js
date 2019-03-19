@@ -1,13 +1,16 @@
 const Pool = require('pg').Pool
 
+// Conectando ao banco,
+// banco de dados postgresql fornecido pelo elephantsql.com
 const pool = new Pool({
   user: 'dfxvmsiv',
   host: 'isilo.db.elephantsql.com',
   database: 'dfxvmsiv',
   password: 'VV64ohA3fhD19oa7dWq2QbK0wQckbKv2',
   port: 5432,
-})
+});
 
+// Script de inicialização
 pool.query(`
 
   create table if not exists users (
@@ -35,6 +38,6 @@ pool.query(`
   alter	table	acontecimento
   		alter	column	id	set	default	nextval('acontecimento_id_seq');
 
-`)
+`);
 
 module.exports = pool

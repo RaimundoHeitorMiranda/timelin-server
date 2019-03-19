@@ -1,4 +1,4 @@
-
+/* Arquivo con script de inicialização do banco de dados */
 create table if not exists users (
   id  int not null primary key,
   nome varchar(30),
